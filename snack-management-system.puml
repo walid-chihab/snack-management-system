@@ -1,0 +1,247 @@
+@startuml
+' UML du projet Snack Management System
+' Note : certains fichiers du dépôt sont encore dans des packages/positions incomplètes
+' et le diagramme ci-dessous représente l'architecture cible du projet.
+
+left to right direction
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "com.snack" {
+  class SnackManagementSystemApplication {
+    + main(args : String[]) : void
+  }
+}
+
+package "com.snack.controller" {
+  class ClientController {
+    - clientService : ClientService
+    + ClientController(clientService : ClientService)
+    + ajouterClient(client : Client) : ResponseEntity<?>
+    + getClients() : ResponseEntity<?>
+    + getClient(id : Long) : ResponseEntity<?>
+    + modifierClient(id : Long, client : Client) : ResponseEntity<?>
+    + supprimerClient(id : Long) : ResponseEntity<?>
+  }
+}
+
+package "com.snack.service" {
+  class ClientService {
+    - clientRepository : ClientRepository
+    + ClientService(clientRepository : ClientRepository)
+    + ajouterClient(client : Client) : Client
+    + getClient(id : Long) : Client
+    + getClients() : List<Client>
+    + modifierClient(id : Long, client : Client) : Client
+    + supprimerClient(id : Long) : void
+  }
+
+  class CommandeService {
+  }
+
+  class CommandeServiceImpl implements CommandeService {
+    - commandeRepository : CommandeRepository
+    - produitRepository : ProduitRepository
+    - stockService : StockService
+    + creerCommande(commande : Commande) : Commande
+    + getAllCommandes() : List<Commande>
+    + getCommandeById(id : Long) : Commande
+    + getCommandesByClient(clientId : Long) : List<Commande>
+    + annulerCommande(id : Long) : void
+    + changerStatut(id : Long, statut : String) : Commande
+  }
+
+  class ProduitService {
+    - produitRepository : ProduitRepository
+    + save(produit : Produit) : Produit
+    + findAll() : List<Produit>
+    + findById(id : Long) : Produit
+    + updateProduit(id : Long, produit : Produit) : Produit
+    + deleteProduit(id : Long) : void
+  }
+
+  class StockService {
+  }
+
+  class StockServiceImpl implements StockService {
+    - stockRepository : StockRepository
+    + verifierStockPourProduit(produit : Produit, quantite : Integer) : void
+    + reserverStockPourProduit(produit : Produit, quantite : Integer) : void
+    + libererStockPourProduit(produit : Produit, quantite : Integer) : void
+    + getAllStocks() : List<Stock>
+    + ajouterIngredient(stock : Stock) : Stock
+  }
+
+  class MegaService {
+  }
+
+  class TacosService {
+  }
+}
+
+package "com.snack.repository" {
+  interface ClientRepository extends JpaRepository<Client, Long> {
+    + existsByEmail(email : String) : boolean
+  }
+
+  interface ProduitRepository extends JpaRepository<Produit, Long> {
+  }
+
+  interface CommandeRepository extends JpaRepository<Commande, Long> {
+    + findByClientId(clientId : Long) : List<Commande>
+    + findByStatut(statut : StatutCommande) : List<Commande>
+    + findByTypeCommande(typeCommande : TypeCommande) : List<Commande>
+    + findByStatutAndTypeCommande(statut : StatutCommande, typeCommande : TypeCommande) : List<Commande>
+  }
+
+  interface StockRepository extends JpaRepository<Stock, Long> {
+    + findByNomIngredient(nomIngredient : String) : Optional<Stock>
+    + findByQuantiteDisponibleLessThanEqual(seuil : Integer) : List<Stock>
+    + existsByNomIngredient(nomIngredient : String) : boolean
+    + updateStockByNom(nom : String, quantite : Integer) : void
+  }
+
+  interface EtageRepository extends JpaRepository<Etage, Long> {
+    + findByNumero(numero : Integer) : List<Etage>
+  }
+
+  interface RayonRepository extends JpaRepository<Rayon, Long> {
+    + findByNomContaining(nom : String) : List<Rayon>
+    + findByEtageId(etageId : Long) : List<Rayon>
+  }
+
+  interface FournisseurRepository extends JpaRepository<Fournisseur, Long> {
+    + findByNomContaining(nom : String) : List<Fournisseur>
+    + findByVille(ville : String) : List<Fournisseur>
+  }
+
+  interface MegaRepository extends JpaRepository<Mega, Long> {
+    + findByType(type : TypeMega) : List<Mega>
+    + findByPrixLessThanEqual(prix : Double) : List<Mega>
+    + findByAvecFritesTrue() : List<Mega>
+  }
+
+  interface TacosRepository extends JpaRepository<Tacos, Long> {
+    + findByType(type : TypeTacos) : List<Tacos>
+    + findByPrixLessThanEqual(prix : Double) : List<Tacos>
+    + findByGratinerTrue() : List<Tacos>
+    + findByAvecPoletTrue() : List<Tacos>
+  }
+
+  interface LigneCommandeRepository extends JpaRepository<LigneCommande, Long> {
+    + findByCommande(commande : Commande) : List<LigneCommande>
+    + findByCommandeId(commandeId : Long) : List<LigneCommande>
+    + findByProduit(produit : Produit) : List<LigneCommande>
+    + findByProduitId(produitId : Long) : List<LigneCommande>
+  }
+}
+
+package "com.snack.model" {
+  class Client {
+    - id : Long
+    - nom : String
+    - prenom : String
+    - email : String
+    - telephone : String
+    - adresse : String
+  }
+
+  class Produit {
+    - id : Long
+  }
+
+  class Commande {
+    - id : Long
+    - dateCommande : LocalDateTime
+    - statut : StatutCommande
+  }
+
+  class LigneCommande {
+    - id : Long
+    - quantite : Integer
+  }
+
+  class Stock {
+    - id : Long
+    - nomIngredient : String
+    - quantiteDisponible : Integer
+  }
+
+  class Etage {
+    - id : Long
+  }
+
+  class Rayon {
+    - id : Long
+  }
+
+  class Fournisseur {
+    - id : Long
+    - nom : String
+    - ville : String
+  }
+
+  class Partie {
+    - id : Long
+  }
+
+  class Mega {
+  }
+
+  class Tacos {
+  }
+
+  enum StatutCommande {
+    EN_ATTENTE
+    CONFIRMEE
+    ANNULEE
+    LIVREE
+  }
+
+  enum TypeCommande {
+    SUR_PLACE
+    A_EMPORTER
+  }
+
+  enum TypeMega {
+    CLASSIC
+    PREMIUM
+  }
+
+  enum TypeTacos {
+    CLASSIC
+    SPECIAL
+  }
+}
+
+ClientController --> ClientService
+ClientService --> ClientRepository
+ClientRepository --> Client
+
+CommandeServiceImpl --> CommandeRepository
+CommandeServiceImpl --> ProduitRepository
+CommandeServiceImpl --> StockService
+StockServiceImpl --> StockRepository
+ProduitService --> ProduitRepository
+
+CommandeRepository --> Commande
+CommandeRepository --> StatutCommande
+CommandeRepository --> TypeCommande
+LigneCommandeRepository --> LigneCommande
+LigneCommandeRepository --> Commande
+LigneCommandeRepository --> Produit
+StockRepository --> Stock
+EtageRepository --> Etage
+RayonRepository --> Rayon
+FournisseurRepository --> Fournisseur
+MegaRepository --> Mega
+MegaRepository --> TypeMega
+TacosRepository --> Tacos
+TacosRepository --> TypeTacos
+
+Client "1" --> "0..*" Commande
+Commande "1" --> "1..*" LigneCommande
+Produit "1" --> "0..*" LigneCommande
+
+@enduml
