@@ -1,10 +1,5 @@
 # Maven
 target/
-*.jar
-*.war
-*.ear
-*.zip
-*.tar.gz
 pom.xml.tag
 pom.xml.releaseBackup
 release.properties
