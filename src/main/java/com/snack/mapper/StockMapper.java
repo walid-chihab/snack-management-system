@@ -5,7 +5,7 @@ import com.snack.dto.response.StockResponse;
 import com.snack.model.Stock;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component 
 public class StockMapper {
 
     // StockRequest → Stock (pour POST)

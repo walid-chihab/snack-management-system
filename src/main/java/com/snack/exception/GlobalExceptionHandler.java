@@ -1,5 +1,7 @@
-package com.snack.exception; // Gestionnaire global des exceptions pour l'application
+package com.snack.exception;
 
+import io.swagger.v3.oas.annotations.Hidden; // SWAGGER
+import jakarta.servlet.http.HttpServletRequest; // SWAGGER
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@Hidden // SWAGGER : empêche Swagger d'analyser cette classe
 public class GlobalExceptionHandler {
 
     // 404 — Ressource non trouvée
@@ -42,7 +45,14 @@ public class GlobalExceptionHandler {
 
     // 500 — Erreurs internes
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex,
+                                                                      HttpServletRequest request) { // SWAGGER
+        // SWAGGER : laisser SpringDoc gérer ses propres erreurs
+        String path = request.getRequestURI();
+        if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui")) {
+            throw ex;
+        }
+
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
