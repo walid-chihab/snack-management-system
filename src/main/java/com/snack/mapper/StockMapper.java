@@ -5,11 +5,11 @@ import com.snack.dto.response.StockResponse;
 import com.snack.model.Stock;
 import org.springframework.stereotype.Component;
 
-@Component 
+@Component // Indique que cette classe est un composant Spring et peut être injectée dans d'autres classes 
 public class StockMapper {
 
     // StockRequest → Stock (pour POST)
-    public Stock toEntity(StockRequest request) {
+    public Stock toEntity(StockRequest request) { 
         if (request == null) return null;
         return Stock.builder()
                 .nomIngredient(request.getNomIngredient())

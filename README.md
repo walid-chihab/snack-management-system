@@ -1,74 +1,65 @@
 # Snack Management System
 
-Un système de gestion de snacks développé avec Spring Boot 3.4.0.
+> API REST de gestion de snack — Spring Boot 3.4 · Java 21 · JPA · H2
 
-## Configuration Technique
+[![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Maven](https://img.shields.io/badge/Maven-3.6+-blue?logo=apachemaven)](https://maven.apache.org/)
+[![Tests](https://img.shields.io/badge/tests-22%20passed-success)](#tests)
 
-- **Spring Boot**: 3.4.0
-- **Java**: 21
-- **Build Tool**: Maven
-- **Group ID**: com.snack
-- **Artifact ID**: snack-management-system
+---
 
-## Dépendances
+## Présentation
 
-- Spring Boot Starter Web
-- Spring Boot Starter Data JPA
-- H2 Database (embedded)
-- Lombok
-- Spring Boot DevTools
+**Snack Management System** est une API REST backend développée avec **Spring Boot 3.4** et **Java 21**. Elle permet de gérer les stocks, produits, commandes et employés d'un snack.
 
-## Prérequis
+Le projet suit une **architecture en couches** (Controller → Service → Repository) avec une séparation stricte des responsabilités, une **gestion centralisée des erreurs** et une **couverture de tests complète**.
 
-- Java 21 ou supérieur
-- Maven 3.6.0 ou supérieur
+---
 
-## Démarrage
+## Stack technique
 
-### Compilation
+| Catégorie | Technologie |
+|-----------|-------------|
+| Langage | Java 21 |
+| Framework | Spring Boot 3.4.0 |
+| Persistance | Spring Data JPA · Hibernate |
+| Base de données | H2 (embedded) |
+| Build | Maven |
+| Tests | JUnit 5 · Mockito · MockMvc |
+| Documentation | SpringDoc OpenAPI (Swagger UI) |
+| Utilitaires | Lombok · DevTools |
+| Validation | Jakarta Bean Validation |
+
+---
+
+## Fonctionnalités
+
+- CRUD complet sur les stocks
+- Validation des entrées avec Jakarta Bean Validation
+- Gestion centralisée des exceptions (`@RestControllerAdvice`)
+- Documentation interactive via Swagger UI
+- Tests automatisés : 22 tests (unitaire, intégration, web)
+- Architecture en couches testable et maintenable
+
+---
+
+## Démarrage rapide
+
+### Prérequis
+
+- Java 21+
+- Maven 3.6+
+
+### Installation et exécution
 
 ```bash
+# Cloner le projet
+git clone https://github.com/tonpseudo/snack-management-system.git
+cd snack-management-system
+
+# Compiler
 mvn clean install
-```
 
-### Exécution
-
-```bash
+# Lancer l'application
 mvn spring-boot:run
-```
-
-L'application démarrera sur `http://localhost:8080`
-
-## Accès à la Console H2
-
-La console H2 est accessible à l'adresse: `http://localhost:8080/h2-console`
-
-- **URL JDBC**: `jdbc:h2:mem:snackdb`
-- **Utilisateur**: `sa`
-- **Mot de passe**: (laisser vide)
-
-## Structure du Projet
-
-```
-snack-management-system/
-├── pom.xml
-├── README.md
-└── src/
-    ├── main/
-    │   ├── java/
-    │   │   └── com/
-    │   │       └── snack/
-    │   │           └── SnackManagementSystemApplication.java
-    │   └── resources/
-    │       └── application.properties
-    └── test/
-        └── java/
-            └── com/
-                └── snack/
-                    └── SnackManagementSystemApplicationTests.java
-```
-
-## Notes
-
-- DevTools est configuré pour le rechargement automatique lors du développement
-- La base de données H2 est une base de données en mémoire (réinitialisée au redémarrage)

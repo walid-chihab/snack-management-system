@@ -8,7 +8,7 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
-# IDE
+# IDE :Integrated Development Environment
 .idea/
 *.iml
 *.iws

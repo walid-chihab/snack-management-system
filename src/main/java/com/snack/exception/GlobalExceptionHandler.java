@@ -45,8 +45,7 @@ public class GlobalExceptionHandler {
 
     // 500 — Erreurs internes
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex,
-                                                                      HttpServletRequest request) { // SWAGGER
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex,HttpServletRequest request) throws Exception{ // SWAGGER
         // SWAGGER : laisser SpringDoc gérer ses propres erreurs
         String path = request.getRequestURI();
         if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui")) {
